@@ -6,7 +6,8 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/web" tag="defaultRootSource"/>
         <wb-resource deploy-path="/" source-path="/budong-info/out/artifacts/budong_war_exploded"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
         <property name="java-output-path" value="/budong-info/target/classes"/>
-        <property name="context-root" value="budong-info"/>
+        <property name="context-root" value="budong"/>
     </wb-module>
 </project-modules>
