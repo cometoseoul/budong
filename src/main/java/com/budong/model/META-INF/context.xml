@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/">
+        <Resource username="javajava" url="jdbc:oracle:thin:@localhost:1521:xe" type="javax.sql.DataSource"
+                  password="javajava" name="jdbc/oracle" maxWait="-1" maxIdle="10" maxAction="20"
+                  driverClassName="oracle.jdbc.driver.OracleDriver" auth="Container"/>
+    <ResourceLink name="jdbc/oracle" global="jdbc/oracle" type="javax.sql.DataSource"/>
+</Context>
