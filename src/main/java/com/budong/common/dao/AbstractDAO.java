@@ -1,11 +1,12 @@
 package com.budong.common.dao;
 
-import java.util.List;
+import java.util.*;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 /*쿼리는 sqlSession.메서드를 호출하면 되는데
 좀 더 보기편하게 로그를 남기기위해서 AbstractDAO를 만들어서 insert, delete, update, select 메서드를 재정의 하였다. 
@@ -60,4 +61,28 @@ public class AbstractDAO {
         printQueryId(queryId);
         return sqlSession.selectList(queryId,params);
     }
+    
+    @SuppressWarnings("unchecked")
+    public Object selectPagingList(String queryId, Object params){
+        printQueryId(queryId);
+        Map<String,Object> map = (Map<String,Object>)params;
+         
+        String strPageIndex = (String)map.get("PAGE_INDEX");
+        String strPageRow = (String)map.get("PAGE_ROW");
+        int nPageIndex = 0;
+        int nPageRow = 20;
+         
+        if(StringUtils.isEmpty(strPageIndex) == false){
+            nPageIndex = Integer.parseInt(strPageIndex)-1;
+        }
+        if(StringUtils.isEmpty(strPageRow) == false){
+            nPageRow = Integer.parseInt(strPageRow);
+        }
+        map.put("START", (nPageIndex * nPageRow) + 1);
+        map.put("END", (nPageIndex * nPageRow) + nPageRow);
+         
+        return sqlSession.selectList(queryId, map);
+    }
+
+
 }

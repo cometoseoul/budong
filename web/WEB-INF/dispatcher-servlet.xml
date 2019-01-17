@@ -10,25 +10,38 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <mvc:annotation-driven>
-         <mvc:argument-resolvers>
-            <bean class="com.budong.common.resolver.CustomMapArgumentResolver"></bean>      
-        </mvc:argument-resolvers>
-    </mvc:annotation-driven>
+<!-- 나상경 추가 -->
+	<mvc:annotation-driven>
+		<mvc:argument-resolvers>
+			<bean
+				class="com.budong.common.resolver.CustomMapArgumentResolver"></bean>
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
 
 	<mvc:default-servlet-handler />
-
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <bean id="loggerInterceptor" class="com.budong.common.logger.LoggerInterceptor"></bean>
-        </mvc:interceptor>
-    </mvc:interceptors>
+	
+<!-- 로그 찍기 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean id="loggerInterceptor"
+				class="com.budong.common.logger.LoggerInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 
 	<context:component-scan
 		base-package="com.budong">
 	</context:component-scan>
+
+	<!-- MultipartResolver 설정 -->
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+		<property name="maxUploadSize" value="1000000000" />
+		<property name="maxInMemorySize" value="100000000" />
+	</bean>
 
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -43,12 +56,22 @@
 	</bean>
 
 	<!-- MyBatis beans -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="mapperLocations" value="classpath*:*Mapper.xml"/>
-    </bean>
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations"
+			value="classpath*:*Mapper.xml" />
+	</bean>
 
-    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
-    </bean>
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory"
+			ref="sqlSessionFactory" />
+	</bean>
+	
+	<!-- 페이징 추가 -->
+<!-- 	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" /> -->
+
+
+
 </beans>

@@ -1,19 +1,194 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- 
+
 <mapper namespace="board">
-     
-         <select id="selectBoardList" parameterType="hashmap" resultType="hashmap">
+
+	<select id="selectBoardList" parameterType="hashmap"
+		resultType="hashmap">
         <![CDATA[
             SELECT
-                NUM,
-                TITLE,
-                CONTENT,
-                CREA_DATE
+            	IDX,
+                TRADE_TYPE,
+                IMAGE1,
+                HOUSE_NAME,
+                PRICE,
+                ROOM,
+                BATHROOM,
+                MEASURE1,
+                MEASURE2,
+                FLOOR1,
+                FLOOR2,
+                NOTE,
+                ADDRESS
             FROM
-                TEST_BOARD
-            ORDER BY NUM DESC
+                SELL_BOARD
+            ORDER BY IDX DESC
         ]]>
-    </select>
-         
+	</select>
+
+<insert id="insertBoard" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX">
+    <selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+        SELECT SEQ_SELL_BOARD.NEXTVAL FROM DUAL
+    </selectKey>
+    <![CDATA[
+        INSERT INTO SELL_BOARD
+        (
+                IDX,
+                HOUSE_TYPE,
+                TRADE_TYPE,
+                ADDRESS,
+                MEASURE1,
+                MEASURE2,
+                FLOOR1,
+                FLOOR2,
+                PRICE,
+                M_PRICE,
+                ROOM,
+                BATHROOM,
+                NOTE,
+                TRADE_YEAR,
+                HOUSE_NAME,
+                LOAN,
+                IMAGE1,
+                IMAGE2,
+                IMAGE3,
+                IMAGE4,
+                IMAGE5,
+                CREA_DATE,
+                CREA_ID,
+                AGENT,
+                HIT_CNT,
+                TRADE_MONTH
+        )
+        VALUES
+        (
+            #{IDX},
+            #{HOUSE_TYPE},
+            #{TRADE_TYPE},
+            #{ADDRESS},
+            #{MEASURE1},
+            #{MEASURE2},
+            #{FLOOR1},
+            #{FLOOR2},
+            #{PRICE},
+            #{M_PRICE},
+            #{ROOM},
+            #{BATHROOM},
+            #{NOTE},
+            #{TRADE_YEAR},
+            #{HOUSE_NAME},
+            #{LOAN},
+            0,
+            0,
+            0,
+            0,
+            0,
+            SYSDATE,
+            'ADMIN',
+            'N',
+            0,
+            #{TRADE_MONTH}
+
+        )
+    ]]>
+	</insert>
+
+	 <update id="updateHitCnt" parameterType="hashmap"> <![CDATA[ UPDATE 
+		SELL_BOARD SET HIT_CNT = NVL(HIT_CNT, 0) + 1 WHERE IDX = #{IDX} ]]> </update>
+
+	<select id="selectBoardDetail" parameterType="hashmap"
+		resultType="hashmap">
+    <![CDATA[
+        SELECT
+			    IDX,
+                HOUSE_TYPE,
+                TRADE_TYPE,
+                ADDRESS,
+                MEASURE1,
+                MEASURE2,
+                FLOOR1,
+                FLOOR2,
+                PRICE,
+                M_PRICE,
+                ROOM,
+                BATHROOM,
+                NOTE,
+                TRADE_YEAR,
+                HOUSE_NAME,
+                LOAN,
+                IMAGE1,
+                IMAGE2,
+                IMAGE3,
+                IMAGE4,
+                IMAGE5,
+                CREA_DATE,
+                CREA_ID,
+                AGENT,
+                HIT_CNT,
+                TRADE_MONTH
+        FROM
+            SELL_BOARD
+        WHERE
+            IDX = #{IDX}       
+    ]]>
+	</select>
+
+	<update id="updateBoard" parameterType="hashmap">
+    <![CDATA[
+        UPDATE SELL_BOARD
+        SET
+            BATHROOM = #{BATHROOM},
+            ROOM = #{ROOM}
+        WHERE
+            IDX = #{IDX}   
+    ]]>
+	</update>
+
+<delete id="deleteBoard" parameterType="hashmap">
+    <![CDATA[
+        DELETE
+        FROM 
+        	SELL_BOARD
+        WHERE
+        	IDX = #{IDX}
+    ]]>
+</delete>
+
+<insert id="insertFile" parameterType="hashmap">
+    <![CDATA[
+        INSERT INTO TB_FILE
+        (
+            IDX,
+            BOARD_IDX,
+            ORIGINAL_FILE_NAME,
+            STORED_FILE_NAME,
+            FILE_SIZE,
+            CREA_ID
+        )
+        VALUES
+        (
+            SEQ_TB_FILE_IDX.NEXTVAL,
+            #{BOARD_IDX},
+            #{ORIGINAL_FILE_NAME},
+            #{STORED_FILE_NAME},
+            #{FILE_SIZE},
+            'Admin'
+        )
+    ]]>
+</insert>
+
+<select id="selectFileList" parameterType="hashmap" resultType="hashmap">
+    <![CDATA[
+        SELECT
+            IDX,
+            ORIGINAL_FILE_NAME,
+            ROUND(FILE_SIZE/1024,1) AS FILE_SIZE
+        FROM
+            TB_FILE
+        WHERE
+            BOARD_IDX = #{IDX}
+            AND DEL_GB = 'N'
+    ]]>
+</select>
+
 </mapper>
